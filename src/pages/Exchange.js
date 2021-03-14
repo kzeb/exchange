@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Form, Input, message, Row, Col } from "antd";
+import { Form, Input, message, Row, Col } from "antd";
 import { API } from "../services/API";
 
 export const Exchange = () => {
@@ -21,29 +21,35 @@ export const Exchange = () => {
   }, []);
 
   const handleFromChange = (value) => {
-    console.log((parseFloat(value.target.value).toFixed(2) * state).toFixed(2));
-    setValueYouSend(value.target.value);
+    if (value.target.value < 0) {
+      setValueYouSend(Math.abs(value.target.value));
+    } else {
+      setValueYouSend(value.target.value);
+    }
     if (
       (parseFloat(value.target.value).toFixed(2) * state).toFixed(2) === "NaN"
     ) {
       setValueTheyReceive("");
     } else {
       setValueTheyReceive(
-        (parseFloat(value.target.value).toFixed(2) * state).toFixed(2)
+        (parseFloat(Math.abs(value.target.value)).toFixed(2) * state).toFixed(2)
       );
     }
   };
 
   const handleToChange = (value) => {
-    console.log((parseFloat(value.target.value).toFixed(2) / state).toFixed(2));
-    setValueTheyReceive(value.target.value);
+    if (value.target.value < 0) {
+      setValueTheyReceive(Math.abs(value.target.value));
+    } else {
+      setValueTheyReceive(value.target.value);
+    }
     if (
       (parseFloat(value.target.value).toFixed(2) / state).toFixed(2) === "NaN"
     ) {
       setValueYouSend("");
     } else {
       setValueYouSend(
-        (parseFloat(value.target.value).toFixed(2) / state).toFixed(2)
+        (parseFloat(Math.abs(value.target.value)).toFixed(2) / state).toFixed(2)
       );
     }
   };
@@ -69,6 +75,7 @@ export const Exchange = () => {
               style={{ paddingRight: 10 }}
             ></img>
             <Input
+              type="number"
               value={valueYouSend}
               onChange={handleFromChange}
               style={{ width: "30%" }}
@@ -84,6 +91,7 @@ export const Exchange = () => {
               style={{ paddingRight: 10 }}
             ></img>
             <Input
+              type="number"
               value={valueTheyReceive}
               onChange={handleToChange}
               style={{ width: "30%" }}
